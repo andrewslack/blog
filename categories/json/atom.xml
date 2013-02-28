@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: json | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/json/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-02-28T10:11:34-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[removing embedded documents from mongo]]></title>
+    <link href="http://andrewslack.github.com/blog/2013/02/05/removing-embedded-documents-from-mongo/"/>
+    <updated>2013-02-05T11:41:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2013/02/05/removing-embedded-documents-from-mongo</id>
+    <content type="html"><![CDATA[<p>Here I have a ticker and some observations for that ticker
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[JSON] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote>&lt;p>db.tickers.find({symbol: "ACTC"}).pretty()&lt;/p>&lt;/blockquote>
+</span><span class='line'>
+</span><span class='line'>&lt;p>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>"_id" : ObjectId("5110294822b958b2ff0001a7"),
+</span><span class='line'>"company_name" : "Advanced Cell Technology, Inc.",
+</span><span class='line'>"country_of_domicile" : "USA",
+</span><span class='line'>"observations" : [
+</span><span class='line'>    {
+</span><span class='line'>        "_id" : ObjectId("5111530522b958af28000001"),
+</span><span class='line'>        "price" : 0.0776,
+</span><span class='line'>        "trade_date_time" : ISODate("2013-02-05T20:28:00Z")
+</span><span class='line'>    }
+</span><span class='line'>],
+</span><span class='line'>"security_type" : "Common Stock",
+</span><span class='line'>"symbol" : "ACTC",
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>To remove all the observations:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[remove emmbedded document] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>db.tickers.update({symbol: "ACTC"}, {$pull: {observations: {$exists:true}}}, false, true)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Which gives:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[JSON] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote>&lt;p>db.tickers.find({symbol: "ACTC"}).pretty()&lt;/p>&lt;/blockquote>
+</span><span class='line'>
+</span><span class='line'>&lt;p>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>"_id" : ObjectId("5110294822b958b2ff0001a7"),
+</span><span class='line'>"company_name" : "Advanced Cell Technology, Inc.",
+</span><span class='line'>"country_of_domicile" : "USA",
+</span><span class='line'>"security_name" : "ADVANCED CELL TECH INC",
+</span><span class='line'>"security_type" : "Common Stock",
+</span><span class='line'>"symbol" : "ACTC",
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Fitnesse, | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/fitnesse-/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-02-28T10:11:34-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running Fitnesse from Jenkins]]></title>
+    <link href="http://andrewslack.github.com/blog/2012/12/06/running-fitnesse-from-jenkins/"/>
+    <updated>2012-12-06T14:00:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2012/12/06/running-fitnesse-from-jenkins</id>
+    <content type="html"><![CDATA[<p><blockquote><p>As defenders of the code<br/>  we want to integrate our Fitnesse tests into the Team's CI process<br/>  So that the team will be alerted to any failures when assumptions are broken</p></blockquote></p>
+
+<p>In order to run our tests from Jenkins we need to make sure that our tests are runnable from the command line.  As luck would have it there is a Fitnesse plugin, called Trinidad, that is callable from Maven.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[Running the Trinidad plugin at the integration-test build phase] []  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-trinidad-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>20090818<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>phase<span class="ni">&amp;gt;</span>integration-test<span class="ni">&amp;lt;</span>/phase<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>run-tests<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>testEngine<span class="ni">&amp;gt;</span>fit<span class="ni">&amp;lt;</span>/testEngine<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>testRepositoryType<span class="ni">&amp;gt;</span>fitnesse<span class="ni">&amp;lt;</span>/testRepositoryType<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>testRepositoryUri<span class="ni">&amp;gt;</span>${basedir}/target/test-classes/fitnesse<span class="ni">&amp;lt;</span>/testRepositoryUri<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>stopAfterFirstFailure<span class="ni">&amp;gt;</span>false<span class="ni">&amp;lt;</span>/stopAfterFirstFailure<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>breakBuildOnFailure<span class="ni">&amp;gt;</span>true<span class="ni">&amp;lt;</span>/breakBuildOnFailure<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>resultRepositoryUri<span class="ni">&amp;gt;</span>${basedir}/target/ErrorLogs/${fitnesse.root}<span class="ni">&amp;lt;</span>/resultRepositoryUri<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>singleTest<span class="ni">&amp;gt;</span>${fitnesse.test}<span class="ni">&amp;lt;</span>/singleTest<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>singleSuite<span class="ni">&amp;gt;</span>${fitnesse.suite}<span class="ni">&amp;lt;</span>/singleSuite<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This will run the tests locally and spit out the results.  In order for this to work we need make sure that the fitnesse tests are copied into the build area prior to the integration-test phase.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[Copy the test cases into the build area] []  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>build-helper-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;executions&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>copy-fitnesse-tests<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>phase<span class="ni">&amp;gt;</span>generate-sources<span class="ni">&amp;lt;</span>/phase<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>     <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>add-test-resource<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>     <span class="ni">&amp;lt;</span>resources<span class="ni">&amp;gt;</span>
+</span><span class='line'>       <span class="ni">&amp;lt;</span>resource<span class="ni">&amp;gt;</span>
+</span><span class='line'>         <span class="ni">&amp;lt;</span>directory<span class="ni">&amp;gt;</span>${basedir}/src/test/fitnesse/MyTests<span class="ni">&amp;lt;</span>/directory<span class="ni">&amp;gt;</span>
+</span><span class='line'>         <span class="ni">&amp;lt;</span>targetPath<span class="ni">&amp;gt;</span>fitnesse/FitNesseRoot/MyTests<span class="ni">&amp;lt;</span>/targetPath<span class="ni">&amp;gt;</span>
+</span><span class='line'>       <span class="ni">&amp;lt;</span>/resource<span class="ni">&amp;gt;</span>
+</span><span class='line'>     <span class="ni">&amp;lt;</span>/resources<span class="ni">&amp;gt;</span>
+</span><span class='line'>   <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'> <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The nice thing here is that the tests are under source control and are copied into the temporary build area (target) and can be disposed after the lifetime of the test execution.</p>
+
+<p>From Jenkins setup a maven based job and configure it as if wwere running it from command line:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[Copy the test cases into the build area] []  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>mvn clean install -Dfitnesse.suite=MyTests
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+This will build your project and run the fitnesse tests.</p>
+
+<p>Overall there are some obvious advantages doing things this way:</p>
+
+<ul>
+<li>No need to depend on a central Fitnesse server to upload your tests and code dependencies to.</li>
+<li>Run on any version of fitnesse.  So if you need the latest you can update your dependencies are rerun.</li>
+<li>Tests are under source control and as such their history is preserved as well as their content</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

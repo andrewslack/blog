@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: MSDOS | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/msdos/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-02-28T10:11:34-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Changing the code page in Windows to help debug a UTF-8 issue]]></title>
+    <link href="http://andrewslack.github.com/blog/2013/02/05/changing-the-code-page-in-windows-to-help-debug-a-utf-8-issue/"/>
+    <updated>2013-02-05T13:37:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2013/02/05/changing-the-code-page-in-windows-to-help-debug-a-utf-8-issue</id>
+    <content type="html"><![CDATA[<p>When viewing a document in a DOS box, mutlibyte characters may not render as you'd expect.  This may be due to the charset that the document was encoded in being at odds with the charset that is in play during your command line session.</p>
+
+<p>To help with that we can use the chcp command to change the codepage, the command takes an (optional) numerical id of the code page (<a href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd317756%28v=vs.85%29.aspx">list of codepages</a>)
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[chcp command] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote>&lt;p>chcp              # displays the current code page
+</span><span class='line'>Active code page: 437&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>chcp 65001        # changed to UTF-8
+</span><span class='line'>Active code page: 65001</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote>
+]]></content>
+  </entry>
+  
+</feed>

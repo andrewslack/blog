@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: autotest, | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/autotest-/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-02-28T10:11:34-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Up and testing with Autotest and Growl]]></title>
+    <link href="http://andrewslack.github.com/blog/2013/02/08/up-and-testing-with-autotest-and-growl/"/>
+    <updated>2013-02-08T14:52:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2013/02/08/up-and-testing-with-autotest-and-growl</id>
+    <content type="html"><![CDATA[<p>We know testing is great.  Write a test, run the test, make the test pass, refactor, rinse, repeat.  How about making automating the "run the test" step?</p>
+
+<p>Yes, that would be great.</p>
+
+<p>To get started add these items to your gemfile
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[gemfile] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem "autotest"
+</span><span class='line'>gem "autotest-growl"
+</span><span class='line'>gem "autotest-fsevent"&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote>&lt;p>bundle        # => to install these gems</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote>
+
+<p>autotest-fsevent monitors for file changes and engages autotest when it finds a file that has changed (the way it does it is far more efficient than polling the filesystem), autotest is the gem that runs the tests and autotest-growl notifies Growl (<a href="http://growl.info/">1</a>) the test results.</p>
+
+<p>Our tests will be written in Rspec and for this to look good we should add some pleasant formatting options. To do that we add the following to the .rpsec file:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[.rspec options] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>--color
+</span><span class='line'>--format nested</span></code></pre></td></tr></table></div></figure></notextile></div>
+For more options run rspec --help</p>
+
+<p>When autotest fires up it looks for an .autotest settings file.  This file can be in the project folder and/or home folder, the former overrides the latter.  So for us we will drop our settings into a local .autotest
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[.autotest options] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require "autotest/growl"            # =>  to interact with Growl
+</span><span class='line'>require "autotest/fsevent"          # =>  to interact with filesystem events</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>That's all the config settings we need.  Now we start up autotest [-v] from the commandline.  Go change a test and see autotest engage and notify you thru Growl!</p>
+]]></content>
+  </entry>
+  
+</feed>

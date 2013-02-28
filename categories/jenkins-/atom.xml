@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jenkins, | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/jenkins-/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-02-28T10:11:34-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting Jenkins to run on a different port]]></title>
+    <link href="http://andrewslack.github.com/blog/2013/02/06/getting-jenkins-to-run-on-a-different-port/"/>
+    <updated>2013-02-06T10:57:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2013/02/06/getting-jenkins-to-run-on-a-different-port</id>
+    <content type="html"><![CDATA[<p>The Jenkins launch daemon is defined here: /Library/LaunchDaemons/org.jenkins-ci.plist</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[JSON] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?>
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+</span><span class='line'>&lt;plist version="1.0">
+</span><span class='line'>&lt;dict>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;key&gt;StandardOutPath&lt;/key&gt;
+</span><span class='line'>&lt;string&gt;/var/log/jenkins/jenkins.log&lt;/string&gt;
+</span><span class='line'>&lt;key&gt;StandardErrorPath&lt;/key&gt;
+</span><span class='line'>&lt;string&gt;/var/log/jenkins/jenkins.log&lt;/string&gt;
+</span><span class='line'>&lt;key&gt;EnvironmentVariables&lt;/key&gt;
+</span><span class='line'>&lt;dict&gt;
+</span><span class='line'>    &lt;key&gt;JENKINS_HOME&lt;/key&gt;
+</span><span class='line'>    &lt;string&gt;/Users/Shared/Jenkins/Home&lt;/string&gt;
+</span><span class='line'>&lt;/dict&gt;
+</span><span class='line'>&lt;key&gt;GroupName&lt;/key&gt;
+</span><span class='line'>&lt;string&gt;daemon&lt;/string&gt;
+</span><span class='line'>&lt;key&gt;KeepAlive&lt;/key&gt;
+</span><span class='line'>&lt;true/&gt;
+</span><span class='line'>&lt;key&gt;Label&lt;/key&gt;
+</span><span class='line'>&lt;string&gt;org.jenkins-ci&lt;/string&gt;
+</span><span class='line'>&lt;key&gt;ProgramArguments&lt;/key&gt;
+</span><span class='line'>&lt;array&gt;
+</span><span class='line'>    &lt;string&gt;/bin/bash&lt;/string&gt;
+</span><span class='line'>    &lt;string&gt;/Library/Application Support/Jenkins/jenkins-runner.sh&lt;/string&gt;
+</span><span class='line'>&lt;/array&gt;
+</span><span class='line'>&lt;key&gt;RunAtLoad&lt;/key&gt;
+</span><span class='line'>&lt;true/&gt;
+</span><span class='line'>&lt;key&gt;UserName&lt;/key&gt;
+</span><span class='line'>&lt;string&gt;jenkins&lt;/string&gt;
+</span><span class='line'>&lt;key&gt;SessionCreate&lt;/key&gt;
+</span><span class='line'>&lt;true /&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&lt;/dict>
+</span><span class='line'>&lt;/plist></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This kicks off the /Library/Application Support/Jenkins/jenkins-runner.sh script which looks like this:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[jenkins-runner.sh] </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;#&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Startup script used by Jenkins launchd job.&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Mac OS X launchd process calls this script to customize&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;the java process <span class="nb">command </span>line used to run Jenkins.&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Customizable parameters are found in&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;/Library/Preferences/org.jenkins-ci.plist&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;#&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;You can manipulate it using the <span class="s2">&quot;defaults&quot;</span> utility.&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;See <span class="s2">&quot;man defaults&quot;</span> <span class="k">for </span>details.&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;defaults<span class="o">=</span><span class="s2">&quot;defaults read /Library/Preferences/org.jenkins-ci&quot;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;war<span class="o">=</span>&lt;code&gt;<span class="nv">$defaults</span> war&lt;/code&gt; <span class="o">||</span> <span class="nv">war</span><span class="o">=</span><span class="s2">&quot;/Applications/Jenkins/jenkins.war&quot;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;javaArgs<span class="o">=</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'><span class="nv">heapSize</span><span class="o">=</span>&lt;code&gt;<span class="nv">$defaults</span> heapSize&lt;/code&gt; &amp;amp;&amp;amp; <span class="nv">javaArgs</span><span class="o">=</span><span class="s2">&quot;$javaArgs -Xmx${heapSize}&quot;</span>
+</span><span class='line'><span class="nv">permGen</span><span class="o">=</span>&lt;code&gt;<span class="nv">$defaults</span> permGen&lt;/code&gt; &amp;amp;&amp;amp; <span class="nv">javaArgs</span><span class="o">=</span><span class="s2">&quot;$javaArgs -XX:MaxPermSize=${permGen}&quot;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;home<span class="o">=</span>&lt;code&gt;<span class="nv">$defaults</span> JENKINS_HOME&lt;/code&gt; &amp;amp;&amp;amp; <span class="nb">export </span><span class="nv">JENKINS_HOME</span><span class="o">=</span><span class="s2">&quot;$home&quot;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;add_to_args<span class="o">()</span> <span class="o">{</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;val<span class="o">=</span><span class="sb">`</span><span class="nv">$defaults</span> <span class="nv">$1</span><span class="sb">`</span> &amp;amp;&amp;amp; <span class="nv">args</span><span class="o">=</span><span class="s2">&quot;$args --${1}=${val}&quot;</span>
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;<span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;args<span class="o">=</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'>add_to_args prefix
+</span><span class='line'>add_to_args httpPort
+</span><span class='line'>add_to_args httpListenAddress
+</span><span class='line'>add_to_args httpsPort
+</span><span class='line'>add_to_args httpsListenAddress
+</span><span class='line'>add_to_args ajp13Port
+</span><span class='line'>add_to_args ajp13ListenAddress&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;echo <span class="s2">&quot;JENKINS_HOME=$JENKINS_HOME&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Jenkins command line for execution:&quot;</span>
+</span><span class='line'><span class="nb">echo</span> /usr/bin/java <span class="nv">$javaArgs</span> -jar <span class="s2">&quot;$war&quot;</span> <span class="nv">$args</span>
+</span><span class='line'><span class="nb">exec</span> /usr/bin/java <span class="nv">$javaArgs</span> -jar <span class="s2">&quot;$war&quot;</span> <span class="nv">$args</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The interesting thing here is that it looks for defaults in /Library/Preferences/org.jenkins-ci.plist.  So if you want to change the port then you need to write an entry into that file.  The command will create the entry (and the file if it does not exist already):
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[write a default value for the port] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo defaults write /Library/Preferences/org.jenkins-ci httpPort 8082</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now reload the daemon
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[write a default value for the port] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo launchctl unload /Library/LaunchDaemons/org.jenkins-ci.plist
+</span><span class='line'>sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can check Jenkins' progress via the log file that the daemon writes to at: /var/log/jenkins/jenkins.log</p>
+]]></content>
+  </entry>
+  
+</feed>
