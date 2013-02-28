@@ -1,3 +1,3 @@
 Almost there :-)
 
-To check out my blog [click here](https://http://andrewslack.github.com/blog)
+To check out my blog [click here](http://andrewslack.github.com/blog)
