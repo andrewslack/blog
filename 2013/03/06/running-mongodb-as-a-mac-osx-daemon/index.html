@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Running Mongodb as a Mac OSX Daemon - Defending the Code</title>
+  <meta name="author" content="Andrew M. Slack">
+
+  
+  <meta name="description" content="On MacOSX daemons can be controlled by the launchctl process which requires a plist specification (typically stored in /Library/LaunchDaemons): [ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andrewslack.github.com/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/">
+  <link href="/blog/favicon.png" rel="icon">
+  <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="/blog/javascripts/ender.js"></script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/blog/atom.xml" rel="alternate" title="Defending the Code" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/">Defending the Code</a></h1>
+  
+    <h2>My TDD Experiences</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andrewslack.github.com/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/blog/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Running Mongodb as a Mac OSX Daemon</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T11:47:00-07:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>On MacOSX daemons can be controlled by the launchctl process which requires a plist specification (typically stored in /Library/LaunchDaemons):</p>
+
+<figure class='code'><figcaption><span>[mongo launchctl plist] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># load
+</span><span class='line'>sudo launchctl load /Library/LaunchDaemons/org.mongodb.sample.plist
+</span><span class='line'># unload
+</span><span class='line'>sudo launchctl unload /Library/LaunchDaemons/org.mongodb.sample.plist</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The plist is shown here:</p>
+
+<figure class='code'><figcaption><span>[mongo launchctl plist] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?>
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+</span><span class='line'>&lt;plist version="1.0">
+</span><span class='line'>&lt;dict>
+</span><span class='line'>  &lt;key>Label&lt;/key>
+</span><span class='line'>  &lt;string>org.mongodb.sample&lt;/string>
+</span><span class='line'>  &lt;key>ProgramArguments&lt;/key>
+</span><span class='line'>  &lt;array>
+</span><span class='line'>    &lt;string>/usr/local/opt/mongodb/mongod&lt;/string>
+</span><span class='line'>    &lt;string>run&lt;/string>
+</span><span class='line'>    &lt;string>--config&lt;/string>
+</span><span class='line'>    &lt;string>/usr/local/etc/mongod.sample.conf&lt;/string>
+</span><span class='line'>  &lt;/array>
+</span><span class='line'>  &lt;key>RunAtLoad&lt;/key>
+</span><span class='line'>  &lt;true/>
+</span><span class='line'>  &lt;key>KeepAlive&lt;/key>
+</span><span class='line'>  &lt;false/>
+</span><span class='line'>  &lt;key>UserName&lt;/key>
+</span><span class='line'>  &lt;string>build&lt;/string>
+</span><span class='line'>  &lt;key>WorkingDirectory&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local&lt;/string>
+</span><span class='line'>  &lt;key>StandardErrorPath&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local/var/log/mongodb/mongodb.sample.log&lt;/string>
+</span><span class='line'>  &lt;key>StandardOutPath&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local/var/log/mongodb/mongodb.sample.log&lt;/string>
+</span><span class='line'>  &lt;key>HardResourceLimits&lt;/key>
+</span><span class='line'>  &lt;dict>
+</span><span class='line'>    &lt;key>NumberOfFiles&lt;/key>
+</span><span class='line'>    &lt;integer>1024&lt;/integer>
+</span><span class='line'>  &lt;/dict>
+</span><span class='line'>  &lt;key>SoftResourceLimits&lt;/key>
+</span><span class='line'>  &lt;dict>
+</span><span class='line'>    &lt;key>NumberOfFiles&lt;/key>
+</span><span class='line'>    &lt;integer>1024&lt;/integer>
+</span><span class='line'>  &lt;/dict>
+</span><span class='line'>&lt;/dict>
+</span><span class='line'>&lt;/plist></span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can (optionally) specify a config file to control the dbpath and logpath settings amongst other things.</p>
+
+<figure class='code'><figcaption><span>[mongod &#8211;config example</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Store data in /usr/local/var/mongodb instead of the default /data/db
+</span><span class='line'>dbpath = /usr/local/var/mongodb/sample
+</span><span class='line'>
+</span><span class='line'># Append logs to /usr/local/var/log/mongodb/pennystocks/prod/mongo.log
+</span><span class='line'>logpath = /usr/local/var/log/mongodb/sample/mongo.log
+</span><span class='line'>logappend = true
+</span><span class='line'>
+</span><span class='line'># Only accept local connections
+</span><span class='line'>bind_ip = 127.0.0.1</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Andrew M. Slack</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T11:47:00-07:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/macosx/'>macosx</a>, <a class='category' href='/blog/categories/mongodb-/'>mongodb,</a>, <a class='category' href='/blog/categories/setup-/'>setup,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://andrewslack.github.com/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/" data-via="" data-counturl="http://andrewslack.github.com/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/08/up-and-testing-with-autotest-and-growl/" title="Previous Post: Up and testing with Autotest and Growl">&laquo; Up and testing with Autotest and Growl</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/">Running Mongodb as a Mac OSX Daemon</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/08/up-and-testing-with-autotest-and-growl/">Up and testing with Autotest and Growl</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/06/getting-jenkins-to-run-on-a-different-port/">Getting Jenkins to run on a different port</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/05/changing-the-code-page-in-windows-to-help-debug-a-utf-8-issue/">Changing the code page in Windows to help debug a UTF-8 issue</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/05/removing-embedded-documents-from-mongo/">removing embedded documents from mongo</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew M. Slack -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

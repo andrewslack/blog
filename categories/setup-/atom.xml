@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: setup, | Defending the Code]]></title>
+  <link href="http://andrewslack.github.com/blog/categories/setup-/atom.xml" rel="self"/>
+  <link href="http://andrewslack.github.com/blog/"/>
+  <updated>2013-03-07T07:24:49-07:00</updated>
+  <id>http://andrewslack.github.com/blog/</id>
+  <author>
+    <name><![CDATA[Andrew M. Slack]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running Mongodb as a Mac OSX Daemon]]></title>
+    <link href="http://andrewslack.github.com/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/"/>
+    <updated>2013-03-06T11:47:00-07:00</updated>
+    <id>http://andrewslack.github.com/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon</id>
+    <content type="html"><![CDATA[<p>On MacOSX daemons can be controlled by the launchctl process which requires a plist specification (typically stored in /Library/LaunchDaemons):
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[mongo launchctl plist] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>load&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>sudo launchctl load /Library/LaunchDaemons/org.mongodb.sample.plist&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>unload&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>sudo launchctl unload /Library/LaunchDaemons/org.mongodb.sample.plist</span></code></pre></td></tr></table></div></figure></notextile></div>
+The plist is shown here:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[mongo launchctl plist] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?>
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+</span><span class='line'>&lt;plist version="1.0">
+</span><span class='line'>&lt;dict>
+</span><span class='line'>  &lt;key>Label&lt;/key>
+</span><span class='line'>  &lt;string>org.mongodb.sample&lt;/string>
+</span><span class='line'>  &lt;key>ProgramArguments&lt;/key>
+</span><span class='line'>  &lt;array>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;string&gt;/usr/local/opt/mongodb/mongod&lt;/string&gt;
+</span><span class='line'>&lt;string&gt;run&lt;/string&gt;
+</span><span class='line'>&lt;string&gt;--config&lt;/string&gt;
+</span><span class='line'>&lt;string&gt;/usr/local/etc/mongod.sample.conf&lt;/string&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/array>
+</span><span class='line'>  &lt;key>RunAtLoad&lt;/key>
+</span><span class='line'>  &lt;true/>
+</span><span class='line'>  &lt;key>KeepAlive&lt;/key>
+</span><span class='line'>  &lt;false/>
+</span><span class='line'>  &lt;key>UserName&lt;/key>
+</span><span class='line'>  &lt;string>build&lt;/string>
+</span><span class='line'>  &lt;key>WorkingDirectory&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local&lt;/string>
+</span><span class='line'>  &lt;key>StandardErrorPath&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local/var/log/mongodb/mongodb.sample.log&lt;/string>
+</span><span class='line'>  &lt;key>StandardOutPath&lt;/key>
+</span><span class='line'>  &lt;string>/usr/local/var/log/mongodb/mongodb.sample.log&lt;/string>
+</span><span class='line'>  &lt;key>HardResourceLimits&lt;/key>
+</span><span class='line'>  &lt;dict>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;key&gt;NumberOfFiles&lt;/key&gt;
+</span><span class='line'>&lt;integer&gt;1024&lt;/integer&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/dict>
+</span><span class='line'>  &lt;key>SoftResourceLimits&lt;/key>
+</span><span class='line'>  &lt;dict>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;key&gt;NumberOfFiles&lt;/key&gt;
+</span><span class='line'>&lt;integer&gt;1024&lt;/integer&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/dict>
+</span><span class='line'>&lt;/dict>
+</span><span class='line'>&lt;/plist></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can (optionally) specify a config file to control the dbpath and logpath settings amongst other things.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>[mongod --config example</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>Store data in /usr/local/var/mongodb instead of the default /data/db&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>dbpath = /usr/local/var/mongodb/sample&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>Append logs to /usr/local/var/log/mongodb/pennystocks/prod/mongo.log&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>logpath = /usr/local/var/log/mongodb/sample/mongo.log
+</span><span class='line'>logappend = true&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>Only accept local connections&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>bind_ip = 127.0.0.1</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>
