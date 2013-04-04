@@ -4,7 +4,7 @@
   <title><![CDATA[Defending the Code]]></title>
   <link href="http://andrewslack.github.com/blog/atom.xml" rel="self"/>
   <link href="http://andrewslack.github.com/blog/"/>
-  <updated>2013-04-04T14:04:01-06:00</updated>
+  <updated>2013-04-04T15:44:53-06:00</updated>
   <id>http://andrewslack.github.com/blog/</id>
   <author>
     <name><![CDATA[Andrew M. Slack]]></name>
@@ -200,7 +200,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'># Store data in /usr/local/var/mongodb instead of the default /data/db
 </span><span class='line'>dbpath = /usr/local/var/mongodb/sample
 </span><span class='line'>
-</span><span class='line'># Append logs to /usr/local/var/log/mongodb/pennystocks/prod/mongo.log
+</span><span class='line'># Append logs to /usr/local/var/log/mongodb/sample/mongo.log
 </span><span class='line'>logpath = /usr/local/var/log/mongodb/sample/mongo.log
 </span><span class='line'>logappend = true
 </span><span class='line'>

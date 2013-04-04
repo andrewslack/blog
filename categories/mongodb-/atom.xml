@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mongodb, | Defending the Code]]></title>
   <link href="http://andrewslack.github.com/blog/categories/mongodb-/atom.xml" rel="self"/>
   <link href="http://andrewslack.github.com/blog/"/>
-  <updated>2013-04-04T14:04:01-06:00</updated>
+  <updated>2013-04-04T15:44:53-06:00</updated>
   <id>http://andrewslack.github.com/blog/</id>
   <author>
     <name><![CDATA[Andrew M. Slack]]></name>
@@ -156,7 +156,7 @@ The plist is shown here:
 </span><span class='line'>
 </span><span class='line'>&lt;p>dbpath = /usr/local/var/mongodb/sample&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;h1>Append logs to /usr/local/var/log/mongodb/pennystocks/prod/mongo.log&lt;/h1>
+</span><span class='line'>&lt;h1>Append logs to /usr/local/var/log/mongodb/sample/mongo.log&lt;/h1>
 </span><span class='line'>
 </span><span class='line'>&lt;p>logpath = /usr/local/var/log/mongodb/sample/mongo.log
 </span><span class='line'>logappend = true&lt;/p>
