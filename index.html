@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew M. Slack">
 
   
-  <meta name="description" content="On MacOSX daemons can be controlled by the launchctl process which requires a plist specification (typically stored in /Library/LaunchDaemons): [ &hellip;">
+  <meta name="description" content="Continuing on from my Autotest record I thought it would be instructive to use Guard to achieve something equivalent. Guard is defined as: a command &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +64,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/04/up-and-testing-with-guard-and-growl/">Up and Testing With Guard and Growl</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-04T12:32:00-06:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Continuing on from my <a href="../../../02/08/up-and-testing-with-autotest-and-growl/">Autotest record</a> I thought it would be instructive to use <a href="https://github.com/guard">Guard</a> to achieve something equivalent.</p>
+
+<p>Guard is defined as:</p>
+
+<blockquote><p>a command line tool to easily handle events on file system modifications</p></blockquote>
+
+<p>It supports a <a href="https://github.com/guard/guard/wiki/List-of-available-Guards">myriad of plugins</a>.  The one we are interested in is <a href="https://github.com/guard/guard-rspec">guard-rspec</a>.</p>
+
+<p>So add this to your gemfile:</p>
+
+<figure class='code'><figcaption><span>[minimal gemfile] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>source "http://rubygems.org"
+</span><span class='line'>
+</span><span class='line'>group :development  do
+</span><span class='line'>  gem 'guard'
+</span><span class='line'>  gem 'guard-rspec'
+</span><span class='line'>  gem 'rb-fsevent'
+</span><span class='line'>  gem "rspec", :require => "spec"
+</span><span class='line'>  gem "growl"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now create a Guardfile via</p>
+
+<figure class='code'><figcaption><span>[create initial Gaurdfile (filled with example definitions)] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ guard init rspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit it so that it looks something like this:</p>
+
+<figure class='code'><figcaption><span>[minimal Guardfile] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>notification :growl
+</span><span class='line'>
+</span><span class='line'>guard 'rspec' do
+</span><span class='line'>  watch(%r{^spec/.+_spec\.rb$})
+</span><span class='line'>  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
+</span><span class='line'>  watch('spec/spec_helper.rb')  { "spec" }
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now create a spec folder (this is one of the places that are being &#8216;watched&#8217;).  So any changes in the specs (below spec/) or domain code (below lib/) will result in the guard firing (invoking rspec).</p>
+
+<p>All we need to do now is run the guard</p>
+
+<figure class='code'><figcaption><span>[start guard] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ guard</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The guard reads the GuardFile and monitors the resources.  Any changes in them i.e. the domain code or tests will invoke the rspec guard.  The results from which are pushed through the notification system, in this case Growl. For Growl to work make sure you have the correct version of growlnotify installed (<a href="http://growl.info/downloads#generaldownloads">download here</a>)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -829,6 +931,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/04/up-and-testing-with-guard-and-growl/">Up and Testing with Guard and Growl</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/">Running Mongodb as a Mac OSX Daemon</a>
       </li>
     
@@ -842,10 +948,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/05/changing-the-code-page-in-windows-to-help-debug-a-utf-8-issue/">Changing the code page in Windows to help debug a UTF-8 issue</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/05/removing-embedded-documents-from-mongo/">removing embedded documents from mongo</a>
       </li>
     
   </ul>

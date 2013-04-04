@@ -5,27 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>removing embedded documents from mongo - Defending the Code</title>
+  <title>Up and Testing with Guard and Growl - Defending the Code</title>
   <meta name="author" content="Andrew M. Slack">
 
   
-  <meta name="description" content="Here I have a ticker and some observations for that ticker [JSON] 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-> db.tickers.find({symbol: "ACTC"}).pretty &hellip;">
+  <meta name="description" content="Continuing on from my Autotest record I thought it would be instructive to use Guard to achieve something equivalent. Guard is defined as: a command &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -34,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://andrewslack.github.com/blog/2013/02/05/removing-embedded-documents-from-mongo/">
+  <link rel="canonical" href="http://andrewslack.github.com/blog/2013/04/04/up-and-testing-with-guard-and-growl/">
   <link href="/blog/favicon.png" rel="icon">
   <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/javascripts/modernizr-2.0.js"></script>
@@ -83,7 +67,7 @@
   
   <header>
     
-      <h1 class="entry-title">Removing Embedded Documents From Mongo</h1>
+      <h1 class="entry-title">Up and Testing With Guard and Growl</h1>
     
     
       <p class="meta">
@@ -99,16 +83,24 @@
   
 
 
-<time datetime="2013-02-05T11:41:00-07:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+<time datetime="2013-04-04T12:32:00-06:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Here I have a ticker and some observations for that ticker</p>
+<div class="entry-content"><p>Continuing on from my <a href="../../../02/08/up-and-testing-with-autotest-and-growl/">Autotest record</a> I thought it would be instructive to use <a href="https://github.com/guard">Guard</a> to achieve something equivalent.</p>
 
-<figure class='code'><figcaption><span>[JSON] </span></figcaption>
+<p>Guard is defined as:</p>
+
+<blockquote><p>a command line tool to easily handle events on file system modifications</p></blockquote>
+
+<p>It supports a <a href="https://github.com/guard/guard/wiki/List-of-available-Guards">myriad of plugins</a>.  The one we are interested in is <a href="https://github.com/guard/guard-rspec">guard-rspec</a>.</p>
+
+<p>So add this to your gemfile:</p>
+
+<figure class='code'><figcaption><span>[minimal gemfile] </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -118,41 +110,27 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>> db.tickers.find({symbol: "ACTC"}).pretty()
+</pre></td><td class='code'><pre><code class=''><span class='line'>source "http://rubygems.org"
 </span><span class='line'>
-</span><span class='line'>{
-</span><span class='line'>  "_id" : ObjectId("5110294822b958b2ff0001a7"),
-</span><span class='line'>  "company_name" : "Advanced Cell Technology, Inc.",
-</span><span class='line'>  "country_of_domicile" : "USA",
-</span><span class='line'>  "observations" : [
-</span><span class='line'>      {
-</span><span class='line'>          "_id" : ObjectId("5111530522b958af28000001"),
-</span><span class='line'>          "price" : 0.0776,
-</span><span class='line'>          "trade_date_time" : ISODate("2013-02-05T20:28:00Z")
-</span><span class='line'>      }
-</span><span class='line'>  ],
-</span><span class='line'>  "security_type" : "Common Stock",
-</span><span class='line'>  "symbol" : "ACTC",
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>group :development  do
+</span><span class='line'>  gem 'guard'
+</span><span class='line'>  gem 'guard-rspec'
+</span><span class='line'>  gem 'rb-fsevent'
+</span><span class='line'>  gem "rspec", :require => "spec"
+</span><span class='line'>  gem "growl"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>To remove all the observations:</p>
+<p>Now create a Guardfile via</p>
 
-<figure class='code'><figcaption><span>[remove emmbedded document] </span></figcaption>
+<figure class='code'><figcaption><span>[create initial Gaurdfile (filled with example definitions)] </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>db.tickers.update({symbol: "ACTC"}, {$pull: {observations: {$exists:true}}}, false, true)</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ guard init rspec</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Which gives:</p>
+<p>Edit it so that it looks something like this:</p>
 
-<figure class='code'><figcaption><span>[JSON] </span></figcaption>
+<figure class='code'><figcaption><span>[minimal Guardfile] </span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -160,22 +138,25 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>> db.tickers.find({symbol: "ACTC"}).pretty()
+</pre></td><td class='code'><pre><code class=''><span class='line'>notification :growl
 </span><span class='line'>
-</span><span class='line'>{
-</span><span class='line'>  "_id" : ObjectId("5110294822b958b2ff0001a7"),
-</span><span class='line'>  "company_name" : "Advanced Cell Technology, Inc.",
-</span><span class='line'>  "country_of_domicile" : "USA",
-</span><span class='line'>  "security_name" : "ADVANCED CELL TECH INC",
-</span><span class='line'>  "security_type" : "Common Stock",
-</span><span class='line'>  "symbol" : "ACTC",
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>guard 'rspec' do
+</span><span class='line'>  watch(%r{^spec/.+_spec\.rb$})
+</span><span class='line'>  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
+</span><span class='line'>  watch('spec/spec_helper.rb')  { "spec" }
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
+<p>Now create a spec folder (this is one of the places that are being &#8216;watched&#8217;).  So any changes in the specs (below spec/) or domain code (below lib/) will result in the guard firing (invoking rspec).</p>
 
+<p>All we need to do now is run the guard</p>
+
+<figure class='code'><figcaption><span>[start guard] </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ guard</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The guard reads the GuardFile and monitors the resources.  Any changes in them i.e. the domain code or tests will invoke the rspec guard.  The results from which are pushed through the notification system, in this case Growl. For Growl to work make sure you have the correct version of growlnotify installed (<a href="http://growl.info/downloads#generaldownloads">download here</a>)</p>
 </div>
 
 
@@ -198,12 +179,12 @@
   
 
 
-<time datetime="2013-02-05T11:41:00-07:00" pubdate data-updated="true">Feb 5<span>th</span>, 2013</time>
+<time datetime="2013-04-04T12:32:00-06:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/json/'>json</a>, <a class='category' href='/blog/categories/mongo-/'>mongo,</a>
+    <a class='category' href='/blog/categories/growl-/'>growl,</a>, <a class='category' href='/blog/categories/guard-/'>guard,</a>, <a class='category' href='/blog/categories/rspec-/'>rspec,</a>, <a class='category' href='/blog/categories/ruby-/'>ruby,</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test-/'>test,</a>
   
 </span>
 
@@ -212,7 +193,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://andrewslack.github.com/blog/2013/02/05/removing-embedded-documents-from-mongo/" data-via="" data-counturl="http://andrewslack.github.com/blog/2013/02/05/removing-embedded-documents-from-mongo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://andrewslack.github.com/blog/2013/04/04/up-and-testing-with-guard-and-growl/" data-via="" data-counturl="http://andrewslack.github.com/blog/2013/04/04/up-and-testing-with-guard-and-growl/" >Tweet</a>
   
   
   
@@ -221,10 +202,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/12/06/running-fitnesse-from-jenkins/" title="Previous Post: Running Fitnesse from Jenkins">&laquo; Running Fitnesse from Jenkins</a>
+        <a class="basic-alignment left" href="/blog/2013/03/06/running-mongodb-as-a-mac-osx-daemon/" title="Previous Post: Running Mongodb as a Mac OSX Daemon">&laquo; Running Mongodb as a Mac OSX Daemon</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/02/05/changing-the-code-page-in-windows-to-help-debug-a-utf-8-issue/" title="Next Post: Changing the code page in Windows to help debug a UTF-8 issue">Changing the code page in Windows to help debug a UTF-8 issue &raquo;</a>
       
     </p>
   </footer>
